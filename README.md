@@ -29,8 +29,8 @@ HTML
 
 <mdx-gun id="hello-world"></mdx-gun>
 
-<button onclick="document.getElementById('about').fire()">Open About</button>
-<mdx-gun id="about"></mdx-gun>
+<button onclick="document.getElementById('about-us').fire()">Open About Us</button>
+<mdx-gun id="about-us"></mdx-gun>
 
 ```
 
