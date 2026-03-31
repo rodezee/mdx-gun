@@ -27,7 +27,10 @@ You can drop this directly into your HTML file. It handles imports from ESM netw
 
   <!-- Optional Customized CSS -->
   <link rel="stylesheet" href="https://esm.sh/kartoncss/karton.min.css">
-
+  
+  <!-- Optional Nice Coding Colors CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  
 </head>
 <body>
 
@@ -89,7 +92,8 @@ but disappears on `window.hash` change.
   <a href="#top">↑ TOP ↑</a>
 
 </body>
-</html>```
+</html>
+```
 
 ----------
 
