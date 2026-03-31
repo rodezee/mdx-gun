@@ -45,10 +45,10 @@ class MdxGun extends HTMLElement {
       // Fallback to load from possible inline-script within this element
       const inline = this.querySelector('script');
       if (inline) {
-        this.cachedRawText = inline.innerHTML;
+        this.cachedRawText = inline.innerHTML.trim();
       } else {
         // Nothing found! Warn!
-        console.warn("Both 'src' and 'id' are unset, also no <template> found, so unable to obtain the MDX source for:", this);
+        console.warn("'src' and 'id' are unset, also no <script \"text/mdx\"> found, unable to obtain the MDX source for:", this);
         return;      
       }
     }
