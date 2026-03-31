@@ -21,7 +21,7 @@
 
   <hr>
 
-  <mdx-gun fire id="hello-world">
+  <mdx-gun fire id="use-state-counter">
     <script type="text/mdx">
 import { useState } from 'https://esm.sh/preact/hooks'
 
@@ -37,6 +37,16 @@ export function Counter() {
 
 # Live Counter
 <Counter />
+    </script>
+  </mdx-gun>
+  
+<mdx-gun fire id="hello-world">
+    <script type="text/mdx">
+export function Thing() {
+  return <>World</>
+}
+
+# Hello <Thing />
     </script>
   </mdx-gun>
 
