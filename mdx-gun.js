@@ -2,6 +2,7 @@ import { evaluate } from 'https://esm.sh/@mdx-js/mdx@3?bundle'
 import * as runtime from 'https://esm.sh/preact/jsx-runtime'
 import { h, render } from 'https://esm.sh/preact'
 import remarkGfm from 'https://esm.sh/remark-gfm@4?bundle'
+import remarkPrism from 'https://esm.sh/remark-prism@1?bundle'
 
 class MdxGun extends HTMLElement {
   constructor() {
@@ -89,7 +90,7 @@ class MdxGun extends HTMLElement {
     try {
       const { default: Content } = await evaluate(this.cachedRawText, {
         ...runtime,
-        remarkPlugins: [remarkGfm],
+        remarkPlugins: [remarkGfm, remarkPrism],
         development: false,
         baseUrl: import.meta.url
       });

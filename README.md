@@ -21,12 +21,19 @@ You can drop this directly into your HTML file. It handles imports from ESM netw
 <head>
   <meta charset="UTF-8">
   <title>MDX Gun Example</title>
+
+  <!-- The Necessary Script -->
+  <script src="https://esm.sh/gh/rodezee/mdx-gun" type="module"></script>
+
+  <!-- Optional Customized CSS -->
   <link rel="stylesheet" href="https://esm.sh/kartoncss/karton.min.css">
-  <script src="https://esm.sh/gh/rodezee/mdx-gun/mdx-gun.js" type="module"></script>
+
 </head>
 <body>
 
-  <span id="top"></span>
+  <div id="top" style="text-align: center;">
+    <a href="https://github.com/rodezee/mdx-gun" style="font-size: 50px;">GitHub ReadMe</a>
+  </div>
 
   <a href="#hello-world">↓ Hello World ↓</a>
 
@@ -82,8 +89,7 @@ but disappears on `window.hash` change.
   <a href="#top">↑ TOP ↑</a>
 
 </body>
-</html>
-```
+</html>```
 
 ----------
 
@@ -105,7 +111,7 @@ Adding this attribute immediately loads, evaluates, and transitions the element 
 
 `smoke`
 
-Adding this attribute keeps the elements content in place even if the window.hash changes to another URL hash
+Adding this attribute keeps the elements content in place even if the window.hash changes to another URL hash.
 
 ### Functions
 
@@ -151,9 +157,8 @@ export function Counter() {
 
 If you prefer writing clean, bare imports like `from 'preact/hooks'`, you can add an [Import Map](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap) to the `<head>` of your HTML file:
 
-HTML
+```html
 
-```
 <script type="importmap">
 {
   "imports": {
@@ -166,15 +171,4 @@ HTML
 ```
 
 Now, the browser will automatically resolve those clean imports inside your evaluated MDX files to the correct CDN URL!
-
-```
-
----
-
-### 🚀 Bonus Tip:
-If you decide to go with **Method 1**, you can actually update your `intro.mdx` file to use that exact code block above! Now that we know why Acorn threw that syntax error earlier (it was the `await` keyword, not the hook itself), writing `import { useState } from 'https://esm.sh/preact/hooks'` will work flawlessly in your example files.
-
-Are you ready to ship this to GitHub, or is there any other little feature or clean-up you want to tackle first? Standard markdown tables, code syntax highlighting, etc.? I am at your service!
-
-```
 
