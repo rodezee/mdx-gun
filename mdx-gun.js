@@ -38,12 +38,21 @@ class MdxGun extends HTMLElement {
   connectedCallback() {
     // Obtain MDX source
     this.src = this.getAttribute('src') || (this.id ? `${this.id}.mdx` : null);
-    if (!this.src) {
-      console.warn("Both 'src' and 'id' are unset, unable to obtain the MDX source for:", this);
-      return;
+    if (this.src) {
+      // Immediately fetch/load the MDX file into memory
+      this.preloadMdx();    
+    } else {
+      // Fallback to load from possible inline-script within this element
+      const inline = this.querySelector('script');
+      if (inline) {
+        this.cachedRawText = inline.innerHTML;
+      } else {
+        // Nothing found! Warn!
+        console.warn("Both 'src' and 'id' are unset, also no <template> found, so unable to obtain the MDX source for:", this);
+        return;      
+      }
     }
-    // Immediately fetch/load the MDX file into memory
-    this.preloadMdx();
+
     // Add addEventListner and checkHash right now
     window.addEventListener('hashchange', () => this.checkHash());
     this.checkHash();
@@ -82,7 +91,7 @@ async run() {
         remarkPlugins: [remarkGfm],
         development: false 
       });
-
+      console.log("JSX evaluated", this);
       if (!this.root) this.root = ReactDOM.createRoot(this);
 
       const Wrapper = () => {

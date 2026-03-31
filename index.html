@@ -17,6 +17,19 @@
 
   <hr>
 
+  <h3>Auto-Fired on Load from template (see source):</h3>
+  <mdx-gun fire>
+  <script type="text/mdx">
+export function Where() {
+  return <>From</>
+}
+
+# <Where /> Template
+  </script>
+  </mdx-gun>
+
+  <hr>
+
   <h3>Auto-Fired on Load unspecified:</h3>
   <mdx-gun fire></mdx-gun>
 
