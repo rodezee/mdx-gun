@@ -1,15 +1,13 @@
 import { evaluate } from 'https://esm.sh/@mdx-js/mdx@3?bundle'
 import * as runtime from 'https://esm.sh/preact/jsx-runtime'
 import { h, render } from 'https://esm.sh/preact'
-import { useEffect, useRef, useState } from 'https://esm.sh/preact/hooks'
 import remarkGfm from 'https://esm.sh/remark-gfm@4?bundle'
 
 class MdxGun extends HTMLElement {
   constructor() {
     super();
-    this.injectStyles();
     this.cachedRawText = null;
-    this.triggerInternalKill = null;
+    this.boundCheckHash = this.checkHash.bind(this);
   }
 
   injectStyles() {
@@ -20,37 +18,46 @@ class MdxGun extends HTMLElement {
       mdx-gun {
         display: block;
         opacity: 0;
-        transform: translateY(10px);
-        max-height: 0;
+        transform: translateY(10px) scaleY(0);
+        transform-origin: top;
         overflow: hidden;
-        transition: opacity 0.5s ease, transform 0.5s ease, max-height 0.6s ease-in-out;
+        transition: opacity 0.4s ease, transform 0.5s ease-in-out;
       }
       mdx-gun[fired] {
         opacity: 1;
-        transform: translateY(0);
-        /* Let JS handle the max-height */
+        transform: translateY(0) scaleY(1);
       }
     `;
     document.head.append(style);
   }
 
   connectedCallback() {
-    this.src = this.getAttribute('src') || (this.id ? `${this.id}.mdx` : null);
-    if (this.src) {
-      this.preloadMdx();    
+    this.injectStyles();
+    
+    // 1. Check for an inline script template FIRST
+    const inline = this.querySelector('script[type="text/mdx"]');
+    
+    if (inline) {
+      this.cachedRawText = inline.innerHTML.trim();
     } else {
-      const inline = this.querySelector('script');
-      if (inline) {
-        this.cachedRawText = inline.innerHTML.trim();
+      // 2. Fall back to checking for a source attribute or ID
+      this.src = this.getAttribute('src') || (this.id ? `${this.id}.mdx` : null);
+      
+      if (this.src) {
+        this.preloadMdx();    
       } else {
-        console.warn("'src' and 'id' are unset, also no <script \"text/mdx\"> found, unable to obtain the MDX source for:", this);
+        console.warn("No <script type=\"text/mdx\"> found, and 'src' or 'id' are unset. Unable to obtain MDX source for:", this);
         return;      
       }
     }
-
-    window.addEventListener('hashchange', () => this.checkHash());
+    
+    window.addEventListener('hashchange', this.boundCheckHash);
     this.checkHash();
     if (this.hasAttribute('fire')) this.fire();
+  }
+
+  disconnectedCallback() {
+    window.removeEventListener('hashchange', this.boundCheckHash);
   }
 
   async preloadMdx() {
@@ -69,9 +76,11 @@ class MdxGun extends HTMLElement {
 
   checkHash() {
     const currentHash = window.location.hash.substring(1);
-    if (this.id && currentHash === this.id) {
+    const isTarget = this.id && currentHash === this.id;
+    console.log("isTarget", isTarget, this);
+    if (isTarget) {
       this.fire();
-    } else if (this.hasAttribute('fired') && !this.hasAttribute('fire')) {
+    } else if (!isTarget && !this.hasAttribute('smoke')) {
       this.kill();
     }
   }
@@ -83,50 +92,12 @@ class MdxGun extends HTMLElement {
         remarkPlugins: [remarkGfm],
         development: false 
       });
+      
+      render(h(Content), this);
 
-      const Wrapper = () => {
-        const contentRef = useRef(null);
-        const [visible, setVisible] = useState(true);
-
-        useEffect(() => {
-          if (!contentRef.current) return;
-
-          const resizeObserver = new ResizeObserver((entries) => {
-            for (let entry of entries) {
-              const height = entry.target.scrollHeight + 40;
-              // Only update max-height dynamically if it's currently expanding/expanded
-              if (this.hasAttribute('fired')) {
-                this.style.maxHeight = `${height}px`;
-              }
-            }
-          });
-
-          resizeObserver.observe(contentRef.current);
-
-          requestAnimationFrame(() => {
-            this.setAttribute('fired', '');
-          });
-
-          this.triggerInternalKill = () => {
-            setVisible(false);
-          };
-
-          return () => {
-            resizeObserver.disconnect();
-            this.triggerInternalKill = null;
-          };
-        }, []);
-
-        return h('div', { 
-          ref: contentRef,
-          style: {
-            opacity: visible ? 1 : 0,
-            transition: 'opacity 0.4s ease', // Fades out slightly faster than the box closes
-          }
-        }, h(Content));
-      };
-
-      render(h(Wrapper), this);
+      requestAnimationFrame(() => {
+        this.setAttribute('fired', '');
+      });
       
     } catch (error) {
       console.error("Mdx-Gun fail to evaluate:", error);
@@ -142,35 +113,15 @@ class MdxGun extends HTMLElement {
       this.run();
     }
   }
-  
+
   kill() {
-    if (this.hasAttribute('fired')) {
-      // 1. Tell Preact to fade out the text
-      if (this.triggerInternalKill) {
-        this.triggerInternalKill();
-      }
+    this.removeAttribute('fired');
 
-      // 2. Grab the current computed pixel height
-      const currentHeight = this.scrollHeight;
-      
-      // 3. Lock it in so the browser has a clear starting number to animate from
-      this.style.maxHeight = `${currentHeight}px`;
-      
-      // 4. Force a tiny DOM recalculation so the browser registers the locked height
-      void this.offsetHeight; 
-
-      // 5. Tell it to shrink to 0px and start the CSS animation
-      this.style.maxHeight = '0px';
-      this.removeAttribute('fired');
-    }
-
-    // 6. Wait for the 0.6s CSS transition to fully finish before purging memory!
     setTimeout(() => { 
       if (!this.hasAttribute('fired')) {
         render(null, this); 
-        this.style.maxHeight = ''; 
       }
-    }, 600);
+    }, 500);
   }
 }
 

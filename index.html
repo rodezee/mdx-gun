@@ -2,59 +2,39 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>MDX Gun - No Shadow DOM</title>
-  <script src="mdx-gun.js" type="module" defer></script>
+  <title>MDX Gun Example</title>
+  <script src="mdx-gun.js" type="module"></script>
 </head>
 <body>
 
-  <h3>Auto-Fired on Load specified by src "Intro":</h3>
-  <mdx-gun fire src="intro.mdx"></mdx-gun>
+  <a href="#hello-world">Hello World</a>
 
   <hr>
 
-  <h3>Auto-Fired on Load specified by id "Hello World":</h3>
-  <mdx-gun fire id="hello-world"></mdx-gun>
+  <mdx-gun id="about-us" src="https://esm.sh/gh/rodezee/mdx-gun/about-us.mdx"></mdx-gun>
+  <button onclick="document.getElementById('about-us').fire()">Fire</button>
+  <button onclick="document.getElementById('about-us').kill()">Kill</button>
 
   <hr>
 
-  <h3>Auto-Fired on Load from template (see source):</h3>
-  <mdx-gun fire>
-  <script type="text/mdx">
-export function Where() {
-  return <>From</>
+  <mdx-gun fire smoke src="intro.mdx"></mdx-gun>
+
+  <hr>
+
+  <mdx-gun fire id="hello-world">
+    <script type="text/mdx">
+export function Welcome() {
+  return <span>Hello World!</span>
 }
 
-# <Where /> Template
-  </script>
+# <Welcome />
+This is rendered dynamically.
+    </script>
   </mdx-gun>
 
   <hr>
 
-  <h3>Auto-Fired on Load unspecified:</h3>
-  <mdx-gun fire></mdx-gun>
-
-  <hr>
-
-  <button onclick="document.getElementById('about-us').fire()">
-    Manually fire component.fire() "About Us"
-  </button>
-  <button onclick="document.getElementById('about-us').kill()">
-    Manually kill component.kill() "About Us"
-  </button>
-  <h3>Manual-Fired Content:</h3>
-  <mdx-gun id="about-us"></mdx-gun>
-
-  <hr>
-
-  <button onclick="window.location.hash = 'gfm'">
-    Trigger #gfm "GitHub flavored markdown"
-  </button>
-  <h3>Hash-Fired GFM Content:</h3>
-  <mdx-gun id="gfm"></mdx-gun>
-
-  <hr>
-
-  <a href="#">Top</a>
+  <a href="#">TOP^</a>
 
 </body>
 </html>

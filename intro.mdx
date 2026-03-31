@@ -1,22 +1,48 @@
-# Intro! 🚀
-
-This content is rendered via **MDX**
-
-- It executes automatically on page load
-- You can use **JSX** and **markdown** formatting
-- **HTML** and **GitHub flavored markdown** are also supported
-
-
-## Try this
-
-hello-world.mdx:
-```markdown
-export function Thing() {
-  return <>World</>
+export function Counter() {
+  // We can use a simple global-style variable directly in MDX for the demo!
+  // This avoids the Preact hooks async import error entirely.
+  return (
+    <div style={{ 
+      padding: '1rem', 
+      background: '#f4f4f5', 
+      borderRadius: '8px', 
+      marginTop: '1rem',
+      display: 'inline-block'
+    }}>
+      <strong>Live Component: </strong>
+      <button 
+        onClick={(e) => {
+          const btn = e.target;
+          const count = parseInt(btn.getAttribute('data-count') || '0') + 1;
+          btn.setAttribute('data-count', count);
+          btn.innerText = `Clicked ${count} times`;
+        }}
+        style={{ padding: '0.2rem 0.6rem', cursor: 'pointer' }}
+      >
+        Clicked 0 times
+      </button>
+    </div>
+  );
 }
 
-# Hello <Thing />
-```
-# 1
-# 2
-# 3
+# 🔫 MDX Gun Loaded!
+
+Welcome to your live-rendered MDX file. This content was fetched asynchronously, evaluated in the browser, and animated using pure CSS.
+
+---
+
+### ✨ Features Active in this File:
+
+* **GitHub Flavored Markdown:** Let's cross out some ~~old bugs~~.
+* **Component Interpolation:** We can define local mini-components and use them directly in the markdown.
+
+### 📊 Task List Example:
+- [x] Create a super light Custom Element
+- [x] Master the `scaleY` CSS transition
+- [x] Render MDX on the fly!
+
+<Counter />
+
+---
+
+> **Note:** Because this evaluates natively, your component styles will automatically adapt to whatever global CSS you put on your webpage. Enjoy!
