@@ -21,11 +21,14 @@ You can drop this directly into your HTML file. It handles imports from ESM netw
 <head>
   <meta charset="UTF-8">
   <title>MDX Gun Example</title>
-  <script src="https://esm.sh/gh/rodezee/mdx-gun" type="module"></script>
+  <link rel="stylesheet" href="https://esm.sh/kartoncss/karton.min.css">
+  <script src="https://esm.sh/gh/rodezee/mdx-gun/mdx-gun.js" type="module"></script>
 </head>
 <body>
 
-  <a href="#hello-world">Hello World</a>
+  <span id="top"></span>
+
+  <a href="#hello-world">↓ Hello World ↓</a>
 
   <hr>
 
@@ -35,24 +38,48 @@ You can drop this directly into your HTML file. It handles imports from ESM netw
 
   <hr>
 
-  <mdx-gun fire smoke src="https://esm.sh/gh/rodezee/mdx-gun/intro.mdx"></mdx-gun>
+  <mdx-gun fire smoke id="intro" src="https://esm.sh/gh/rodezee/mdx-gun/intro.mdx"></mdx-gun>
 
   <hr>
 
-  <mdx-gun fire id="hello-world">
+  <mdx-gun fire smoke id="use-state-counter">
     <script type="text/mdx">
-export function Welcome() {
-  return <span>Hello World!</span>
+import { useState } from 'https://esm.sh/preact/hooks'
+
+export function Counter() {
+  const [count, setCount] = useState(0);
+  
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Clicked {count} times
+    </button>
+  );
 }
 
-# <Welcome />
-This is rendered dynamically.
+# Another Live Counter
+This one was created using a **Preact** hook **useState**, directly within the HTML
+<Counter />  
     </script>
   </mdx-gun>
 
   <hr>
 
-  <a href="#">TOP^</a>
+  <mdx-gun fire id="hello-world">
+    <script type="text/mdx">
+export function Thing() {
+  return <>World</>
+}
+
+# Hello <Thing />
+
+This `<mdx-gun ..>` does not "smoke" and stay,  
+but disappears on `window.hash` change.
+    </script>
+  </mdx-gun>
+
+  <hr>
+
+  <a href="#top">↑ TOP ↑</a>
 
 </body>
 </html>
