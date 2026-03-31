@@ -77,7 +77,7 @@ class MdxGun extends HTMLElement {
   checkHash() {
     const currentHash = window.location.hash.substring(1);
     const isTarget = this.id && currentHash === this.id;
-    console.log("isTarget", isTarget, this);
+
     if (isTarget) {
       this.fire();
     } else if (!isTarget && !this.hasAttribute('smoke')) {
@@ -90,7 +90,8 @@ class MdxGun extends HTMLElement {
       const { default: Content } = await evaluate(this.cachedRawText, {
         ...runtime,
         remarkPlugins: [remarkGfm],
-        development: false 
+        development: false,
+        baseUrl: import.meta.url
       });
       
       render(h(Content), this);

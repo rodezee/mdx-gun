@@ -23,12 +23,20 @@
 
   <mdx-gun fire id="hello-world">
     <script type="text/mdx">
-export function Welcome() {
-  return <span>Hello World!</span>
+import { useState } from 'https://esm.sh/preact/hooks'
+
+export function Counter() {
+  const [count, setCount] = useState(0);
+  
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Clicked {count} times
+    </button>
+  );
 }
 
-# <Welcome />
-This is rendered dynamically.
+# Live Counter
+<Counter />
     </script>
   </mdx-gun>
 
